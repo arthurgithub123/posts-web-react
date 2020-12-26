@@ -21,7 +21,7 @@ const SignIn: React.FC = () => {
               <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="E-mail" />
             </Form.Item>
 
-            <Form.Item name="senha" rules={[{
+            <Form.Item name="password" rules={[{
               required: true,
               message: 'Senha obrigatória',
               min: 6
