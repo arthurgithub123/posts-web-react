@@ -5,17 +5,12 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 const SignIn: React.FC = () => {
 
-  const handleSubmitSuccess = useCallback((values) => {
-
-    const { email, password } = values;
-  }, []);
-
   return (
-    <Row justify="center" align="middle" style={{ textAlign: 'center', minHeight: '100vh' }}>
+    <Row justify="center" align="middle" style={{ textAlign: 'center', minHeight: '100vh', background: '#f2f2f2' }}>
       <Col xs={1} sm={7} md={9}></Col>
       <Col xs={22} sm={10} md={6}>
         <Card>
-          <Form name="normal_login" className="login-form" onFinish={handleSubmitSuccess}>
+          <Form name="normal_login" className="login-form">
 
             <Form.Item name="email" rules={[{
               required: true,
