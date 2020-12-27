@@ -36,7 +36,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const signIn = useCallback(async ({ email, password }) => {
 
-    const response = await axiosConfiguration.post('sessions', { email, password });
+    const response = await axiosConfiguration.post('api/Session/Login', { email, password });
 
     const { token, user } = response.data;
 
