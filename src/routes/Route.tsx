@@ -3,7 +3,8 @@ import React from 'react';
 import {
   Route as ReactRouterDOMRoute,
   RouteProps as ReactRouterDOMRouteProps,
-  Redirect
+  Redirect,
+  Link
 } from 'react-router-dom';
 
 import { useAuth } from '../hooks/auth';
@@ -37,9 +38,8 @@ const Route: React.FC<RouteProps> = ({ isPrivate = false, component: Component, 
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                       <Menu.Item key="1" icon={<BarChartOutlined />}>Dashboard</Menu.Item>
                       <Menu.SubMenu key="postsKey" icon={<FileOutlined />} title="Posts">
-                        <Menu.Item key="postsKey1">Todos</Menu.Item>
-                        <Menu.Item key="postsKey2">Aceitos</Menu.Item>
-                        <Menu.Item key="postsKey3">Rejeitados</Menu.Item>
+                        <Menu.Item key="postsKey1"><Link to="/posts/create">Criar</Link></Menu.Item>
+                        <Menu.Item key="postsKey2"><Link to="/posts/list">Listagem</Link></Menu.Item>
                       </Menu.SubMenu>
                       <Menu.SubMenu key="usersKey" icon={<TeamOutlined />} title="Usuários">
                         <Menu.Item key="usersKey1">Administradores</Menu.Item>
