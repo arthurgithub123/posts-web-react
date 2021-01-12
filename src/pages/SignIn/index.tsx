@@ -32,7 +32,7 @@ const SignIn: React.FC = () => {
           title: 'Erro',
           maskClosable: true,
           centered: true,
-          content: `${err.response.data}`,
+          content: err.response.data
         });
       });
   }, []);
