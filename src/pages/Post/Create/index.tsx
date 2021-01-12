@@ -10,7 +10,7 @@ const CreatePost: React.FC = () => {
   const history = useHistory();
   
   const [selectedImage, setSelectedImage] = useState<File | undefined>();
-  const [textValue, setTextValue] = useState('aaaaaaaaaaaa');
+  const [textValue, setTextValue] = useState('');
 
   const handleSetTextValue = useCallback((value) => { 
     setTextValue(value); 
