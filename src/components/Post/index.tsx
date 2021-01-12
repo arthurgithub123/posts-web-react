@@ -31,9 +31,15 @@ const Post: React.FC<IProps> = ({
   initialText,
   cardProps}) => {
   
-  const handleTextareaChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => { 
-    setTextProp !== undefined && setTextProp(event.target.value);
-  }, []);
+    const [textValue, setTextValue] = useState('');
+
+  const handleTextareaChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
+    
+    setTextProp !== undefined && 
+      setTextProp(event.target.value);
+
+    setTextValue(event.target.value);
+  }, [setTextProp]);
 
   const defaultTextareaStyles = {
     width: '100%',
@@ -74,7 +80,7 @@ const Post: React.FC<IProps> = ({
       <textarea 
         onChange={handleTextareaChange} 
         style={ !textareaStyle ? defaultTextareaStyles : { ...defaultTextareaStyles, ...textareaStyle }}
-        value={initialText !== undefined ? initialText : ''}
+        value={initialText !== undefined ? initialText : textValue}        
       >
       </textarea>
 
