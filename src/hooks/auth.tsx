@@ -43,6 +43,8 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.setItem('@Posts:token@', token);
     localStorage.setItem('@Posts:user@', JSON.stringify(user));
 
+    axiosConfiguration.defaults.headers.Authorization = `Bearer ${token}`;
+
     setData({ token, user });
   }, []);
 
