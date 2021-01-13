@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import Dropzone from '../Dropzone';
 import { Card } from 'antd';
@@ -9,8 +9,10 @@ interface IProps {
   setTextProp?(text: string): void;
   cancelButton?: boolean;
   initialImageSrc?: string | undefined;
+  readonlyImage?: boolean;
   initialText?: string | undefined;
   textareaStyle?: any;
+  readonlyTextArea?: boolean;
   selectedImageStyle?: any;
   textIconStyle?: any;
   iconStyle?: any;
@@ -22,7 +24,9 @@ const Post: React.FC<IProps> = ({
   setSelectedImageProp, 
   setTextProp, 
   textareaStyle, 
+  readonlyTextArea = false,
   selectedImageStyle, 
+  readonlyImage = false,
   textIconStyle, 
   iconStyle, 
   cancelButtonStyle,
@@ -30,7 +34,7 @@ const Post: React.FC<IProps> = ({
   initialImageSrc,
   initialText,
   cardProps}) => {
-  
+
     const [textValue, setTextValue] = useState('');
 
   const handleTextareaChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -79,8 +83,9 @@ const Post: React.FC<IProps> = ({
     <Card hoverable {...cardProps}>
       <textarea 
         onChange={handleTextareaChange} 
-        style={ !textareaStyle ? defaultTextareaStyles : { ...defaultTextareaStyles, ...textareaStyle }}
-        value={initialText !== undefined ? initialText : textValue}        
+        style={ !(!!textareaStyle) ? defaultTextareaStyles : { ...defaultTextareaStyles, ...textareaStyle }}
+        value={initialText !== undefined ? initialText : textValue}
+        readOnly={readonlyTextArea}
       >
       </textarea>
 
@@ -92,6 +97,7 @@ const Post: React.FC<IProps> = ({
         cancelButtonStyle={!cancelButtonStyle ? defaultDropzoneCancelButtonStyle : { ...defaultDropzoneCancelButtonStyle, ...cancelButtonStyle }}
         cancelButton={cancelButton}
         initialImageSrc={initialImageSrc != undefined ? initialImageSrc : undefined}
+        readonlyImage={readonlyImage}
       />
     </Card>
   );
