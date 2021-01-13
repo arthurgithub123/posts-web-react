@@ -38,8 +38,11 @@ const ListPost: React.FC = () => {
             posts &&
               posts.map(post => (
                 <Post key={post.id}
-                  initialText={post.description}
+                  initialText={post.description != '' ? post.description : undefined}
+                  textareaStyle={!!post.description ? undefined : { display: 'none' }} // textareaStyle={post.description == '' ? { display: 'none' } : undefined}
                   initialImageSrc={post.imageUrl}
+                  readonlyImage
+                  readonlyTextArea
                 />
               ))
           }
