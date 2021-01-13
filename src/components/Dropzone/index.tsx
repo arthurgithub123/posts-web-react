@@ -11,6 +11,7 @@ interface IProps {
   textIconStyle?: any;
   iconStyle?: any;
   cancelButtonStyle?: any;
+  readonlyImage?: boolean;
 }
 
 const Dropzone: React.FC<IProps> = ({ 
@@ -20,7 +21,8 @@ const Dropzone: React.FC<IProps> = ({
   textIconStyle,
   iconStyle,
   cancelButtonStyle,
-  initialImageSrc }) => {
+  initialImageSrc,
+  readonlyImage = false }) => {
 
   const [selectedFileUrl, setSelectedFileUrl] = useState('');
 
@@ -41,23 +43,27 @@ const Dropzone: React.FC<IProps> = ({
 
   const removeSelectedImage = useCallback(() => {
     setSelectedFileUrl('');
-    onImageSelected !== undefined && onImageSelected(undefined);
+    onImageSelected !== undefined && 
+      onImageSelected(undefined);
   }, []);
  
   const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: 'image/*' });
 
   return (
     <>
-      <div {...getRootProps()}>
+      <div {...getRootProps()} style={{ pointerEvents: readonlyImage ? 'none' : 'auto' }}>
         <input {...getInputProps()} accept="image/*" />
         {
-          selectedFileUrl
-            ? <img src={selectedFileUrl} alt="selectedProfileImage" style={selectedImageStyle} />
+          readonlyImage && !(!!selectedFileUrl)
+            ? null
             :
-              <p style={textIconStyle}>
-                <UploadOutlined style={iconStyle} />
-                Clique ou arraste para a imagem
-              </p>
+              selectedFileUrl
+                ? <img src={selectedFileUrl} alt="selectedProfileImage" style={selectedImageStyle} />
+                :
+                  <p style={textIconStyle}>
+                    <UploadOutlined style={iconStyle} />
+                    Clique ou arraste para a imagem
+                  </p>
         }
       </div>
       {
