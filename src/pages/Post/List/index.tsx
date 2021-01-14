@@ -39,7 +39,7 @@ const ListPost: React.FC = () => {
             <Col md={10}>
               <Post key={post.id}
                 initialText={post.description != '' ? post.description : undefined}
-                textareaStyle={!!post.description ? undefined : { display: 'none' }} // textareaStyle={post.description == '' ? { display: 'none' } : undefined}
+                textareaStyle={!!post.description ? undefined : { display: 'none' }}
                 initialImageSrc={post.imageUrl}
                 readonlyImage
                 readonlyTextArea
