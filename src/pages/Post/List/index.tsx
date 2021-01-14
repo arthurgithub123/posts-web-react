@@ -31,24 +31,24 @@ const ListPost: React.FC = () => {
 
   return (
     <>
-      <Row>
-        <Col md={7}></Col>
-        <Col md={10}>
-          {
-            posts &&
-              posts.map(post => (
-                <Post key={post.id}
-                  initialText={post.description != '' ? post.description : undefined}
-                  textareaStyle={!!post.description ? undefined : { display: 'none' }} // textareaStyle={post.description == '' ? { display: 'none' } : undefined}
-                  initialImageSrc={post.imageUrl}
-                  readonlyImage
-                  readonlyTextArea
-                />
-              ))
-          }
-        </Col>
-        <Col md={7}></Col>
-      </Row>
+      {
+      posts &&
+        posts.map(post => (
+          <Row style={{ marginBottom: '30px' }}>
+            <Col md={7}></Col>
+            <Col md={10}>
+              <Post key={post.id}
+                initialText={post.description != '' ? post.description : undefined}
+                textareaStyle={!!post.description ? undefined : { display: 'none' }} // textareaStyle={post.description == '' ? { display: 'none' } : undefined}
+                initialImageSrc={post.imageUrl}
+                readonlyImage
+                readonlyTextArea
+              />
+            </Col>
+            <Col md={7}></Col>
+          </Row>
+        ))
+      }
     </>
   );
 }
