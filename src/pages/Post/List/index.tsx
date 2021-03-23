@@ -75,7 +75,7 @@ const ListPost: React.FC = () => {
                   post.canEdit
                     ?
                       <Post key={post.id}
-                        initialText={post.description != '' ? post.description : undefined}
+                        initialText={post.description !== '' ? post.description : undefined}
                         textareaStyle={!!post.description ? undefined : { display: 'none' }}
                         initialImageSrc={post.imageUrl}
                         readonlyImage
@@ -90,7 +90,7 @@ const ListPost: React.FC = () => {
                     />
                   :
                     <Post key={post.id}
-                      initialText={post.description != '' ? post.description : undefined}
+                      initialText={post.description !== '' ? post.description : undefined}
                       textareaStyle={!!post.description ? undefined : { display: 'none' }}
                       initialImageSrc={post.imageUrl}
                       readonlyImage
