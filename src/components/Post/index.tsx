@@ -1,12 +1,19 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
-import Dropzone from '../Dropzone';
-import { Card } from 'antd';
+import { Button, Card, Spin } from 'antd';
 import { CardProps } from 'antd/lib/card';
 
+import { useDropzone } from 'react-dropzone';
+import { UploadOutlined, CloseOutlined } from '@ant-design/icons';
+import { notification, Modal } from 'antd';
+import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+
+import axiosConfiguration from '../../axiosConfiguration/axiosConfigurations';
+import { useHistory } from 'react-router-dom';
+
 interface IProps {
-  setSelectedImageProp?(file: File | undefined): void;
-  setTextProp?(text: string): void;
+  // setSelectedImageProp?(file: File | undefined): void;
+  // setTextProp?(text: string): void;
   cancelButton?: boolean;
   initialImageSrc?: string | undefined;
   readonlyImage?: boolean;
@@ -18,11 +25,16 @@ interface IProps {
   iconStyle?: any;
   cancelButtonStyle?: any;
   cardProps?: CardProps;
+  cancelButtonAlert?: boolean;
+  cancelButtonAlertMessage?: string;
+  // cancelButtonTooltip?: boolean;
+  cancelButtonTooltipMessage?: string;
+  postId?: string | undefined;
+  editPost?: boolean;
+  createPost?: boolean;
 }
 
-const Post: React.FC<IProps> = ({ 
-  setSelectedImageProp, 
-  setTextProp, 
+const Post: React.FC<IProps> = ({
   textareaStyle, 
   readonlyTextArea = false,
   selectedImageStyle, 
@@ -33,17 +45,38 @@ const Post: React.FC<IProps> = ({
   cancelButton = false,
   initialImageSrc,
   initialText,
-  cardProps}) => {
+  cardProps,
+  cancelButtonAlert = false,
+  cancelButtonAlertMessage = '',
+  cancelButtonTooltipMessage = '',
+  postId = undefined,
+  editPost = false,
+  createPost = false
+}) => {
 
-    const [textValue, setTextValue] = useState('');
+  const history = useHistory();
+  const [spinLoad, setSpinLoad] = useState(false);
 
-  const handleTextareaChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => {
-    
-    setTextProp !== undefined && 
-      setTextProp(event.target.value);
+  useEffect(() => {
+    setTextValue(initialText !== undefined ? initialText : '');
+    setSelectedFileUrl(initialImageSrc);
 
-    setTextValue(event.target.value);
-  }, [setTextProp]);
+    if(initialImageSrc !== undefined) {
+      setSelectedFileUrl(initialImageSrc);
+      setSelectedImage(new File([''], ''));
+    }
+    else {
+      setSelectedFileUrl(undefined);
+      setSelectedImage(undefined);
+    }
+  }, [initialText, initialImageSrc]);
+  
+  // POST
+  const [textValue, setTextValue] = useState('');
+
+  const handleTextareaChange = useCallback((event: ChangeEvent<HTMLTextAreaElement>) => { 
+    setTextValue(event.target.value); 
+  }, []);
 
   const defaultTextareaStyles = {
     width: '100%',
@@ -79,27 +112,180 @@ const Post: React.FC<IProps> = ({
     background: 'gray'
   }
 
-  return (
-    <Card hoverable {...cardProps}>
-      <textarea 
-        onChange={handleTextareaChange} 
-        style={ !(!!textareaStyle) ? defaultTextareaStyles : { ...defaultTextareaStyles, ...textareaStyle }}
-        value={initialText !== undefined ? initialText : textValue}
-        readOnly={readonlyTextArea}
-      >
-      </textarea>
+  // DROPZONE
+  const [selectedFileUrl, setSelectedFileUrl] = useState<string | undefined>(undefined);
+  const [selectedImage, setSelectedImage] = useState<File | undefined>(undefined);
+  const { confirm } = Modal;
 
-      <Dropzone
-        onImageSelected={setSelectedImageProp}
-        selectedImageStyle={!selectedImageStyle ? defaultDropzoneSelectedImageStyle : { ...defaultDropzoneSelectedImageStyle, ...selectedImageStyle }}
-        textIconStyle={!textIconStyle ? defaultDropzoneTextIconStyle: { ...defaultDropzoneTextIconStyle, ...textIconStyle }}
-        iconStyle={!iconStyle ? defaultDropzoneIconStyle : { ...defaultDropzoneIconStyle, ...iconStyle }}
-        cancelButtonStyle={!cancelButtonStyle ? defaultDropzoneCancelButtonStyle : { ...defaultDropzoneCancelButtonStyle, ...cancelButtonStyle }}
-        cancelButton={cancelButton}
-        initialImageSrc={initialImageSrc != undefined ? initialImageSrc : undefined}
-        readonlyImage={readonlyImage}
-      />
-    </Card>
+  const onDrop = useCallback((acceptedFiles) => {
+    setSpinLoad(true);
+    setSelectedImage(acceptedFiles[0]);
+    setSelectedFileUrl(URL.createObjectURL(acceptedFiles[0]));
+    setSpinLoad(false);
+  }, [selectedImage, textValue]);
+
+  const removeSelectedImage = useCallback(() => {
+
+    if(!textValue) {
+      notification['error']({
+        message: 'Erro',
+        description: cancelButtonTooltipMessage,
+        duration: 2
+      });
+
+      return;
+    }
+
+    if(cancelButtonAlert) {
+      if(textValue === '') {
+        notification['error']({
+          message: 'Erro',
+          description: cancelButtonTooltipMessage,
+          duration: 2
+        });
+
+        return;
+      }
+
+      confirm({
+        title: cancelButtonAlertMessage,
+        icon: <ExclamationCircleOutlined />,
+        onOk() {
+          setSelectedImage(undefined);
+          setSelectedFileUrl('');
+        }
+      });
+    }
+    else {
+      setSelectedImage(undefined);
+      setSelectedFileUrl('');
+    }
+  }, [textValue, cancelButtonAlert, cancelButtonAlertMessage, cancelButtonTooltipMessage, confirm]);
+ 
+  const handleSubmit = useCallback(() => {
+
+    if(!selectedImage && !textValue) {
+      notification['error']({
+        message: 'Erro',
+        description: cancelButtonTooltipMessage,
+        duration: 2
+      });
+  
+      return;
+    }
+
+    setSpinLoad(true);
+
+    const formData = new FormData();
+    
+    if(editPost) formData.append('id', '' + postId);
+    
+    formData.append('description', textValue);
+
+    if(selectedImage !== undefined) {
+
+      if(selectedImage.size == 0) {
+        formData.append('imageUrl', 'notChanged');
+      }
+      else {
+        formData.append('imageUrl', 'notNull')
+        formData.append('image', selectedImage);
+      }
+    }
+    else {
+      formData.append('imageUrl', '');
+    }
+    
+    if(createPost) {
+      
+      axiosConfiguration.post('api/Posts/Create', formData)
+        .then(() => {
+          setSpinLoad(false);
+          
+          notification['success']({
+            message: 'Post criado',
+            duration: 2
+          });
+
+          history.push('/posts/list');
+        })
+        .catch(err => {
+          setSpinLoad(false);
+
+          notification['error']({
+            message: 'Erro',
+            description: err.response.data.Message,
+            duration: 2
+          });
+        });
+    }
+    
+    if(editPost) {
+
+      axiosConfiguration.put(`api/Posts/Edit/${postId}`, formData)
+        .then(() => {
+          setSpinLoad(false);
+          
+          notification['success']({
+            message: 'Post alterado',
+            duration: 2
+          });
+
+          history.push('/posts/list');
+        })
+        .catch(err => {
+          setSpinLoad(false);
+
+          notification['error']({
+            message: 'Erro',
+            description: err.response.data.Message,
+            duration: 2
+          });
+        });
+    }
+  }, [selectedImage, textValue, editPost, history, postId]);
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: 'image/*' });
+
+  return (
+    <Spin tip="Carregando..." size="large" indicator={<LoadingOutlined spin />} spinning={spinLoad}>
+      <Card hoverable {...cardProps}>
+        <textarea
+          onChange={handleTextareaChange}
+          style={!(!!textareaStyle) ? defaultTextareaStyles : { ...defaultTextareaStyles, ...textareaStyle }}
+          value={textValue}
+          readOnly={readonlyTextArea}
+        >
+        </textarea>
+
+        <div {...getRootProps()} style={{ pointerEvents: readonlyImage ? 'none' : 'auto' }}>
+          <input {...getInputProps()} accept="image/*" />
+          {
+            readonlyImage && !(!!selectedFileUrl)
+              ? null
+              :
+              selectedFileUrl
+                ? <img src={selectedFileUrl} alt="selectedProfileImage" style={!(!!selectedImageStyle) ? defaultDropzoneSelectedImageStyle : { ...defaultDropzoneSelectedImageStyle, ...selectedImageStyle }} />
+                :
+                <p style={!(!!textIconStyle) ? defaultDropzoneTextIconStyle : { ...defaultDropzoneTextIconStyle, ...textIconStyle }}>
+                  <UploadOutlined style={!(!!iconStyle) ? defaultDropzoneIconStyle : { ...defaultDropzoneIconStyle, ...iconStyle }} />
+                    Clique ou arraste para a imagem
+                  </p>
+          }
+        </div>
+        {
+          selectedFileUrl && cancelButton
+          &&
+          <CloseOutlined
+            onClick={removeSelectedImage}
+            style={!(!!cancelButtonStyle) ? defaultDropzoneCancelButtonStyle : { ...defaultDropzoneCancelButtonStyle, ...cancelButtonStyle }}
+          />
+        }
+
+        <Button type="primary" block onClick={handleSubmit}>{ createPost ? 'Criar' : 'Alterar' }</Button>
+      </Card>
+    </Spin>
+    
   );
 }
 
