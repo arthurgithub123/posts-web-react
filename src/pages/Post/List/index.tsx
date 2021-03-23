@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import Post from '../../../components/Post';
 import { Col, notification, Radio, Row, Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined, EditOutlined } from '@ant-design/icons';
 
 import axiosConfiguration from '../../../axiosConfiguration/axiosConfigurations';
+import { useHistory } from 'react-router-dom';
 
 interface IPost {
   id: any;
@@ -12,10 +13,12 @@ interface IPost {
   createdAt: any;
   recomendDate: any;
   imageUrl: string;
+  canEdit: string;
 }
 
 const ListPost: React.FC = () => {
 
+  const history = useHistory();
   const [posts, setPosts] = useState<IPost[]>([]);
   const [filterValue, setFilterValue] = React.useState('all');
   const [spinLoad, setSpinLoad] = useState(false);
@@ -30,7 +33,7 @@ const ListPost: React.FC = () => {
       })
       .catch(err => {
         setSpinLoad(false);
-
+        
         notification['error']({
           message: 'Erro',
           description: err.response.data.Message,
@@ -68,13 +71,33 @@ const ListPost: React.FC = () => {
             <Row style={{ marginBottom: '30px' }}>
               <Col md={7}></Col>
               <Col md={10}>
-                <Post key={post.id}
-                  initialText={post.description != '' ? post.description : undefined}
-                  textareaStyle={!!post.description ? undefined : { display: 'none' }}
-                  initialImageSrc={post.imageUrl}
-                  readonlyImage
-                  readonlyTextArea
-                />
+                {
+                  post.canEdit
+                    ?
+                      <Post key={post.id}
+                        initialText={post.description != '' ? post.description : undefined}
+                        textareaStyle={!!post.description ? undefined : { display: 'none' }}
+                        initialImageSrc={post.imageUrl}
+                        readonlyImage
+                        readonlyTextArea
+                        cardProps={
+                          {
+                            actions: [
+                              <EditOutlined key="edit" onClick={() => history.push(`/posts/edit/${post.id}`, { postId: post.id })} />
+                            ] 
+                          }
+                        }
+                    />
+                  :
+                    <Post key={post.id}
+                      initialText={post.description != '' ? post.description : undefined}
+                      textareaStyle={!!post.description ? undefined : { display: 'none' }}
+                      initialImageSrc={post.imageUrl}
+                      readonlyImage
+                      readonlyTextArea
+                    />
+                }
+                
               </Col>
               <Col md={7}></Col>
             </Row>
