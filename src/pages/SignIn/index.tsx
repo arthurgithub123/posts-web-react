@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import { Form, Input, Button, Checkbox, Row, Col, Card, Spin, Modal, Alert } from 'antd';
+import { Form, Input, Button, Checkbox, Row, Col, Card, Spin, Modal } from 'antd';
 import { UserOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import { useAuth } from '../../hooks/auth';
