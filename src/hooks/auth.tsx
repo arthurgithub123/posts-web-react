@@ -15,6 +15,7 @@ interface SignInCredentials {
 interface AuthContextData {
   user: object;
   signIn(credentials: SignInCredentials): Promise<void>;
+  signInAfterAccountCreation(userToken: AuthState): void;
   signOut(): void;
 }
 
@@ -56,8 +57,18 @@ const AuthProvider: React.FC = ({ children }) => {
     setData({} as AuthState);
   }, []);
 
+  const signInAfterAccountCreation = useCallback(({ token, user }) => {
+    
+    localStorage.setItem('@Posts:token@', token);
+    localStorage.setItem('@Posts:user@', JSON.stringify(user));
+
+    axiosConfiguration.defaults.headers.Authorization = `Bearer ${token}`;
+
+    setData({ token, user });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut, signInAfterAccountCreation }}>
       {children}
     </AuthContext.Provider>
   );
