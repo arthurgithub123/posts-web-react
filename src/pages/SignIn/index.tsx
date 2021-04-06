@@ -4,7 +4,7 @@ import { Form, Input, Button, Checkbox, Row, Col, Card, Spin, Modal } from 'antd
 import { UserOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import { useAuth } from '../../hooks/auth';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const SignIn: React.FC = () => {
 
@@ -68,7 +68,9 @@ const SignIn: React.FC = () => {
                   Entre
               </Button>
                 <div>Ou</div>
-                <a href="">Registre-se</a>
+                <Link to="/users/create">
+                  Registre-se
+                </Link>
               </Form.Item>
             </Form>
           </Card>
