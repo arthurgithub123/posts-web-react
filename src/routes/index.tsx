@@ -7,6 +7,7 @@ import Dashboard from '../pages/Dashboard';
 import CreatePost from '../pages/Post/Create';
 import ListPost from '../pages/Post/List';
 import EditPost from '../pages/Post/Edit';
+import CreateUser from '../pages/User/Create';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -15,6 +16,7 @@ const Routes: React.FC = () => (
     <Route path="/posts/create" component={CreatePost} isPrivate={true} />
     <Route path="/posts/list" component={ListPost} isPrivate={true} />
     <Route path="/posts/edit/:id" component={EditPost} isPrivate={true} />
+    <Route path="/users/create" component={CreateUser} />
   </Switch>
 );
 
