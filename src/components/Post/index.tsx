@@ -4,9 +4,8 @@ import { Button, Card, Spin } from 'antd';
 import { CardProps } from 'antd/lib/card';
 
 import { useDropzone } from 'react-dropzone';
-import { UploadOutlined, CloseOutlined } from '@ant-design/icons';
 import { notification, Modal } from 'antd';
-import { ExclamationCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, LoadingOutlined, UploadOutlined, CloseOutlined } from '@ant-design/icons';
 
 import axiosConfiguration from '../../axiosConfiguration/axiosConfigurations';
 import { useHistory } from 'react-router-dom';
@@ -282,7 +281,11 @@ const Post: React.FC<IProps> = ({
           />
         }
 
-        <Button type="primary" block onClick={handleSubmit}>{ createPost ? 'Criar' : 'Alterar' }</Button>
+        {
+          (editPost || createPost)
+            &&
+              <Button type="primary" block onClick={handleSubmit}>{ createPost ? 'Criar' : 'Alterar' }</Button>
+        }
       </Card>
     </Spin>
     
