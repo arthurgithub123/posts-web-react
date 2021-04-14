@@ -4,7 +4,7 @@ import axiosConfiguration from '../axiosConfiguration/axiosConfigurations';
 
 interface AuthState {
   token: string;
-  user: object;
+  user: { id: string; role: string; name: string; email: string; };
 }
 
 interface SignInCredentials {
@@ -13,7 +13,7 @@ interface SignInCredentials {
 }
 
 interface AuthContextData {
-  user: object;
+  user: { id: string; role: string; name: string; email: string; };
   signIn(credentials: SignInCredentials): Promise<void>;
   signInAfterAccountCreation(userToken: AuthState): void;
   signOut(): void;
