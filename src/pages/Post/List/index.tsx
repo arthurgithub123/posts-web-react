@@ -84,10 +84,21 @@ const ListPost: React.FC = () => {
               <ul>
                 <li><Radio value="all">Todos</Radio></li>
                 <li><Radio value="onlyAdministratorsPosts">Posts de administradores</Radio></li>
-                <li><Radio value="recomendedNotAccepted">Recomendados e não aceitos</Radio></li>
-                <li><Radio value="recomendedAndAccepted">Recomendados e aceitos</Radio></li>
-                <li><Radio value="recomendDate">Data de recomendação</Radio></li>
-                <li><Radio value="acceptedDate">Data de aceitação</Radio></li>
+                {
+                  user.role === 'Administrator'
+                    ? <>
+                        <li><Radio value="recomendedNotAccepted">Recomendados e não aceitos</Radio></li>
+                        <li><Radio value="recomendedAndAccepted">Recomendados e aceitos</Radio></li>
+                        <li><Radio value="recomendDate">Data de recomendação</Radio></li>
+                        <li><Radio value="acceptedDate">Data de aceitação</Radio></li>
+                      </>
+                    : <>
+                        <li><Radio value="accepted">Meus posts aceitos</Radio></li>
+                        <li><Radio value="myCreatedPosts">Meus posts criados</Radio></li>
+                        <li><Radio value="notAccepted">Meus posts recusados</Radio></li>
+                        <li><Radio value="onlyCommomUsersPosts">Posts de usuários comuns</Radio></li>
+                      </>
+                }
               </ul>
             </Radio.Group>
           </Col>
