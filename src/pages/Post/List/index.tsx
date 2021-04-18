@@ -94,7 +94,7 @@ const ListPost: React.FC = () => {
                       </>
                     : <>
                         <li><Radio value="accepted">Meus posts aceitos</Radio></li>
-                        <li><Radio value="myCreatedPosts">Meus posts criados</Radio></li>
+                        <li><Radio value="myCreatedPosts">Meus posts ainda não aceitos/rejeitados</Radio></li>
                         <li><Radio value="notAccepted">Meus posts recusados</Radio></li>
                         <li><Radio value="onlyCommomUsersPosts">Posts de usuários comuns</Radio></li>
                       </>
