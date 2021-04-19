@@ -87,7 +87,7 @@ const ListPost: React.FC = () => {
                 {
                   user.role === 'Administrator'
                     ? <>
-                        <li><Radio value="recomendedNotAccepted">Recomendados e não aceitos</Radio></li>
+                        <li><Radio value="recomendedNotAcceptedYet">Recomendados ainda não aceitos</Radio></li>
                         <li><Radio value="recomendedAndAccepted">Recomendados e aceitos</Radio></li>
                         <li><Radio value="recomendDate">Data de recomendação</Radio></li>
                         <li><Radio value="acceptedDate">Data de aceitação</Radio></li>
@@ -121,7 +121,7 @@ const ListPost: React.FC = () => {
                         {cardProps:{ actions: [<EditOutlined key="edit" onClick={() => history.push(`/posts/edit/${post.id}`, { postId: post.id })} />]}}
                     }
                     {
-                      ...user.role === 'Administrator' && filterValue === 'recomendedNotAccepted' &&
+                      ...user.role === 'Administrator' && filterValue === 'recomendedNotAcceptedYet' &&
                         {cardProps:{ actions: [<CheckSquareOutlined key="edit" onClick={() => handleAccept(post.id)} />]}}
                     }
                   />
