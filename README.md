@@ -1,6 +1,12 @@
 # Posts Web React
 Sistema para usuários criarem posts com texto e/ou imagem, mas os posts devem ser aceitos pelos usuários administradores.
 
+### Tópicos
+* [Telas](#Telas)
+* [Dependências](#dependências)
+* [Instalaçao](#instalaçao)
+* [Rodando a aplicação](#rodando-a-aplicação)
+
 ### Telas
 ![User Create](https://raw.githubusercontent.com/arthurgithub123/posts-web-react/master/readme_file_images/create%20account.png)
 ![User SignIn](https://raw.githubusercontent.com/arthurgithub123/posts-web-react/master/readme_file_images/signin.png)
