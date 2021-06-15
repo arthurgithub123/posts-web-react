@@ -4,7 +4,7 @@ Sistema para usuários criarem posts com texto e/ou imagem, mas os posts devem s
 ### Tópicos
 * [Telas](#Telas)
 * [Dependências](#dependências)
-* [Instalaçao](#instalaçao)
+* [Instalação](#instalação)
 * [Rodando a aplicação](#rodando-a-aplicação)
 
 ### Telas
