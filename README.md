@@ -26,3 +26,7 @@ git clone https://github.com/arthurgithub123/posts-web-react.git
    npm install
 ```
 para que todas as dependências sejam baixadas automaticamente.
+
+### Rodando a aplicação
+1 - Acesse a pasta do projeto utilizando o terminal
+2 - Execute o comando npm start
