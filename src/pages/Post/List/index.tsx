@@ -114,7 +114,7 @@ const ListPost: React.FC = () => {
         {
           posts &&
             posts.data.map(post => (
-              <Row style={{ marginBottom: '30px' }}>
+              <Row style={{ marginBottom: '30px' }} key={post.id}>
                 <Col md={7}></Col>
                 <Col md={10}>
                   <Post key={post.id}
