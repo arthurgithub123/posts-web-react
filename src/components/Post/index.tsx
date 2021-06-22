@@ -197,7 +197,7 @@ const Post: React.FC<IProps> = ({
     
     if(createPost) {
       
-      axiosConfiguration.post('api/Posts/Create', formData)
+      axiosConfiguration.post('api/Posts', formData)
         .then(() => {
           setSpinLoad(false);
           
