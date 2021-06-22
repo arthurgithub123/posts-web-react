@@ -1,14 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import Post from '../../../components/Post';
-import { Col, Modal, notification, Radio, Row, Spin } from 'antd';
+import { Col, Modal, notification, Pagination, Radio, Row, Spin } from 'antd';
 import { LoadingOutlined, EditOutlined, CheckSquareOutlined } from '@ant-design/icons';
 
 import axiosConfiguration from '../../../axiosConfiguration/axiosConfigurations';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../../hooks/auth';
 
-interface IPost {
+interface IPostResponse {
+  totalRecords: number;
+  nextPage: string;
+  previousPage: string;
+  data: IPostData[];
+}
+
+interface IPostData {
   id: any;
   description: string;
   createdAt: any;
@@ -21,14 +28,14 @@ const ListPost: React.FC = () => {
 
   const { user } = useAuth();
   const history = useHistory();
-  const [posts, setPosts] = useState<IPost[]>([]);
+  const [posts, setPosts] = useState<IPostResponse>();
   const [filterValue, setFilterValue] = React.useState('all');
   const [spinLoad, setSpinLoad] = useState(false);
   
   useEffect(() => {
     setSpinLoad(true);
 
-    axiosConfiguration.get<IPost[]>('api/Posts/List/' + filterValue)
+    axiosConfiguration.get<IPostResponse>('api/Posts/List/' + filterValue)
       .then(posts => {
         setPosts(posts.data);
         setSpinLoad(false);
@@ -106,7 +113,7 @@ const ListPost: React.FC = () => {
         </Row>
         {
           posts &&
-            posts.map(post => (
+            posts.data.map(post => (
               <Row style={{ marginBottom: '30px' }}>
                 <Col md={7}></Col>
                 <Col md={10}>
@@ -130,6 +137,26 @@ const ListPost: React.FC = () => {
               </Row>
             ))
         }
+        <Row>
+          <Col md={8}></Col>
+          <Col md={8} style={{ alignItems: 'stretch' }}>
+            <Pagination style={{ display: posts?.totalRecords == 0 || posts == undefined ? 'none' : 'block' }}
+              defaultCurrent={1} 
+              total={posts?.totalRecords} 
+              size="small" 
+              showSizeChanger
+              onChange={async (page, pageSize) => {
+                const postResponse: IPostResponse = await (await axiosConfiguration.get(`api/Posts/List/${filterValue}`, { params: { page: page, per_page: pageSize } })).data
+                setPosts(postResponse);
+              }}
+              onShowSizeChange={async (currentPage, pageSize) => {
+                const postResponse: IPostResponse =  await (await axiosConfiguration.get(`api/Posts/List/${filterValue}`, { params: { page: currentPage, per_page: pageSize } })).data
+                setPosts(postResponse);
+              }}
+            />
+          </Col>
+          <Col md={8}></Col>
+        </Row>
       </Spin>
     </>
   );
